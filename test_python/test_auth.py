@@ -54,7 +54,11 @@ def test_login_success():
     with patch('routers.router_auth.authTodo.sign_in_with_email_and_password', return_value=mock_response):
         response = client.post(
             "/auth/login",
-            json={"email": "test@example.com", "password": "password123"}
+            data={
+                "username": "test@example.com",
+                "password": "password123"
+            },
+            headers={"Content-Type": "application/x-www-form-urlencoded"}
         )
         assert response.status_code == 200
         assert "access_token" in response.json()
@@ -64,6 +68,10 @@ def test_login_failure():
     with patch('routers.router_auth.authTodo.sign_in_with_email_and_password', side_effect=Exception("Invalid credentials")):
         response = client.post(
             "/auth/login",
-            json={"email": "wrong@example.com", "password": "wrongpass"}
+            data={
+                "username": "wrong@example.com",
+                "password": "wrongpass"
+            },
+            headers={"Content-Type": "application/x-www-form-urlencoded"}
         )
         assert response.status_code == 401

@@ -1,6 +1,7 @@
 import os
 import pytest
 from unittest.mock import patch
+import json
 
 # Mock service account with all required fields
 mock_service_account = {
@@ -27,7 +28,7 @@ def setup_test_env():
     os.environ['FIREBASE_STORAGEBUCKET'] = 'test.appspot.com'
     os.environ['FIREBASE_MESSAGINGSENDERID'] = '123456789'
     os.environ['FIREBASE_APPID'] = '1:123456789:web:abcdef'
-    os.environ['FIREBASE_SERVICE_ACCOUNT'] = str(mock_service_account)
+    os.environ['FIREBASE_SERVICE_ACCOUNT'] = json.dumps(mock_service_account)
 
     # Mock Firebase initialization
     with patch('database.firebase.get_service_account', return_value=mock_service_account):
