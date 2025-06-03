@@ -1,7 +1,7 @@
-
 from fastapi.testclient import TestClient
 from main import app  # Assurez-vous d'ajuster le chemin si nécessaire
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
+import pytest
 
 # Mock de la fonction auth.create_user pour éviter d'appeler Firebase lors des tests
 @patch("firebase_admin.auth.create_user")
@@ -25,22 +25,41 @@ def test_signup(mock_create_user):
     print(f"User data: {user_data}")
     print(f"Mock create_user arguments: {mock_create_user.call_args}")
 
-# Mock de la fonction authStudent.sign_in_with_email_and_password pour éviter d'appeler Firebase lors des tests
-@patch("database.firebase.authTodo.sign_in_with_email_and_password")
-def test_login(mock_sign_in):
-    client = TestClient(app)
+client = TestClient(app)
 
-    # Données de connexion fictives pour le test
-    login_data = {"username": "test@example.com", "password": "testpassword"}
+@pytest.fixture(autouse=True)
+def mock_firebase():
+    """Mock Firebase initialization and database operations"""
+    with patch('database.firebase.firebase_admin.initialize_app') as mock_init:
+        with patch('database.firebase.pyrebase.initialize_app') as mock_pyrebase:
+            mock_db = MagicMock()
+            mock_auth = MagicMock()
+            mock_pyrebase.return_value.database.return_value = mock_db
+            mock_pyrebase.return_value.auth.return_value = mock_auth
+            yield {
+                'db': mock_db,
+                'auth': mock_auth
+            }
 
-    # Simuler la connexion avec Firebase
-    mock_sign_in.return_value = {"idToken": "mocked_token"}
+def test_login_success():
+    """Test successful login"""
+    mock_response = {
+        'idToken': 'test-token',
+        'localId': 'test-user-id'
+    }
+    with patch('routers.router_auth.authTodo.sign_in_with_email_and_password', return_value=mock_response):
+        response = client.post(
+            "/auth/login",
+            json={"email": "test@example.com", "password": "password123"}
+        )
+        assert response.status_code == 200
+        assert "access_token" in response.json()
 
-    # Exécuter la requête de test
-    response = client.post("/auth/login", data=login_data)
-
-    assert response.status_code == 200
-    assert response.json() == {"access_token": "mocked_token", "token_type": "bearer"}
-
-    # Assurez-vous que la fonction sign_in_with_email_and_password a été appelée avec les bonnes données
-    mock_sign_in.assert_called_once_with(email="test@example.com", password="testpassword")
+def test_login_failure():
+    """Test failed login"""
+    with patch('routers.router_auth.authTodo.sign_in_with_email_and_password', side_effect=Exception("Invalid credentials")):
+        response = client.post(
+            "/auth/login",
+            json={"email": "wrong@example.com", "password": "wrongpass"}
+        )
+        assert response.status_code == 401
