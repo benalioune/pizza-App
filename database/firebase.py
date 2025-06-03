@@ -36,7 +36,7 @@ def get_service_account():
             return json.load(key_file)
     except FileNotFoundError:
         # If file not found, try environment variable
-        service_account_json = os.getenv('FIREBASE_SERVICE_ACCOUNT')
+        service_account_json = os.getenv('FIREBASE_SERVICE_ACCOUNT_KEY')
         if not service_account_json:
             raise ValueError("Missing FIREBASE_SERVICE_ACCOUNT environment variable")
         return json.loads(service_account_json)
