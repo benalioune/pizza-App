@@ -5,9 +5,6 @@ from datetime import datetime
 
 
 
-# DTO : Data Transfert Object ou Schema
-# Représente la structure de la données (data type) en entrée ou en sortie de notre API.
-# Model Pydantic = Datatype
 
 class TodoNoID(BaseModel):
     name: str
@@ -29,7 +26,7 @@ class UserLogin(BaseModel):
     email: str
     password: str
     
-# define how we except the request body to be
+
 class Config:
     schema_extra={
         "exemple": {
@@ -77,9 +74,9 @@ class OrderItem(BaseModel):
 class OrderCreate(BaseModel):
     items: List[OrderItem]
     customer_name: str
-    delivery_type: str  # sur place/à emporter/livraison
+    delivery_type: str  
 
 class Order(OrderCreate):
     id: str
-    status: str  # reçue/en préparation/prête/livrée
+    status: str  
     order_time: datetime

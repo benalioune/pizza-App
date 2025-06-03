@@ -5,7 +5,7 @@ import os
 import sys
 
 
-# Add the parent directory to the Python path
+
 sys.path.append(os.path.dirname(os.getcwd()))
 
 from database.firebase import db
@@ -32,13 +32,13 @@ router  =  APIRouter(
     prefix='/auth'
     
 )
-#signup endPoint
+
 @router.post('/signup', status_code=201)
 async def signup(user_data:User):
     email = user_data.email
     password = user_data.password
     
-    # Validate password length
+   
     if len(password) < 6:
         raise HTTPException(
             status_code=400,
@@ -46,14 +46,14 @@ async def signup(user_data:User):
         )
     
     try:
-        # Create user in Firebase Authentication
+       
         user = auth.create_user(
             email=email,
             password=password
         )
         
         try:
-            # Try to store additional user data in Realtime Database
+           
             user_data_dict = {
                 "email": email,
                 "uid": user.uid,
@@ -61,7 +61,7 @@ async def signup(user_data:User):
             }
             db.child("users").child(user.uid).set(user_data_dict)
         except Exception as db_error:
-            # If database write fails, still return success since user was created
+            # si la db return succéss depuis création
             print(f"Warning: Could not write user data to database: {str(db_error)}")
             
         return JSONResponse(content={
@@ -83,7 +83,7 @@ async def signup(user_data:User):
 
    
 
-#login endPoint
+#login 
 
 @router.post('/login')
 async def create_swagger_token(user_credentials: OAuth2PasswordRequestForm = Depends()):
@@ -106,7 +106,7 @@ async def create_swagger_token(user_credentials: OAuth2PasswordRequestForm = Dep
                
 
  
-#protect route to get personal data 
+
 @router.get('/me')
 def secure_endpoint(user_data: dict = Depends(get_current_user)):
     return user_data
