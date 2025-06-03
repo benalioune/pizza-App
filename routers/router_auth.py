@@ -38,27 +38,46 @@ async def signup(user_data:User):
     email = user_data.email
     password = user_data.password
     
-    try:
-        
-        user = auth.create_user(
-            email = email,
-            password = password
+    # Validate password length
+    if len(password) < 6:
+        raise HTTPException(
+            status_code=400,
+            detail="Password must be at least 6 characters long"
         )
-        newUser = User(email=email, password=password)
+    
+    try:
+        # Create user in Firebase Authentication
+        user = auth.create_user(
+            email=email,
+            password=password
+        )
         
-        generatedId=uuid.uuid4()
-        
-        db.child("user").child(generatedId).set(newUser.model_dump())
-        
-        
+        try:
+            # Try to store additional user data in Realtime Database
+            user_data_dict = {
+                "email": email,
+                "uid": user.uid,
+                "created_at": str(user.user_metadata.creation_timestamp)
+            }
+            db.child("users").child(user.uid).set(user_data_dict)
+        except Exception as db_error:
+            # If database write fails, still return success since user was created
+            print(f"Warning: Could not write user data to database: {str(db_error)}")
+            
         return JSONResponse(content={
-            "message" :  f"User account created successfully for user {user.uid}"
+            "message": f"User account created successfully for user {user.uid}",
+            "user_id": user.uid
         })
         
-    except auth.EmailAlreadyExistsError: 
+    except auth.EmailAlreadyExistsError:
         raise HTTPException(
-            status_code=401,
-            detail= f"account already created for the user {user.email}"
+            status_code=409,  # Conflict
+            detail=f"Account already exists for email {email}"
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"An error occurred while creating the account: {str(e)}"
         )
     
 
@@ -68,21 +87,26 @@ async def signup(user_data:User):
 
 @router.post('/login')
 async def create_swagger_token(user_credentials: OAuth2PasswordRequestForm = Depends()):
-    try :
-        user = authTodo.sign_in_with_email_and_password(email=user_credentials.username, password=user_credentials.password)
+    try:
+        user = authTodo.sign_in_with_email_and_password(
+            email=user_credentials.username, 
+            password=user_credentials.password
+        )
         token = user['idToken']
-        print(token)
         return {
             'access_token': token,
             'token_type': 'bearer'
         }
-    except :
-        raise HTTPException(status_code=401, detail='Invalid credentials')
+    except Exception as e:
+        raise HTTPException(
+            status_code=401,
+            detail='Invalid credentials'
+        )
 
                
 
  
 #protect route to get personal data 
 @router.get('/me')
-def secure_endpoint(user_data: int = Depends(get_current_user)):
+def secure_endpoint(user_data: dict = Depends(get_current_user)):
     return user_data

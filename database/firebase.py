@@ -2,39 +2,23 @@ import firebase_admin
 from firebase_admin import credentials
 import json
 import pyrebase
-
 import os
 
+# Load configurations from JSON files
+with open('configs/firebase_config.json', 'r') as config_file:
+    firebase_config_json = json.load(config_file)
 
-from dotenv import load_dotenv
+with open('configs/firebase_service_account.json', 'r') as key_file:
+    service_account_key_json = json.load(key_file)
 
-load_dotenv()
-
-configs= {
-    "FIREBASE_SERVICE_ACCOUNT_KEY" :     os.getenv("FIREBASE_SERVICE_ACCOUNT_KEY"),
-    "FIREBASE_CONFIG" : os.getenv('FIREBASE_CONFIG')
-              
-}
-
-
-firebase_config_json  =  json.loads(configs['FIREBASE_CONFIG'])
-
-
-# Parse the JSON key
-service_account_key_json = json.loads(configs["FIREBASE_SERVICE_ACCOUNT_KEY"])
 # Initialize the app with a service account
-
-# import des crédentiels
-#initialise our app import credentials if not done
-if not firebase_admin._apps: 
+if not firebase_admin._apps:
     cred = credentials.Certificate(service_account_key_json)
     firebase_admin.initialize_app(cred)
 
-
-
-# getting access to firebase  by using rebase / create a new firebase instance  
+# Initialize Firebase with configuration
 firebase = pyrebase.initialize_app(firebase_config_json)
-# access to our database instance by pyrebase 
+# Get database and auth instances
 db = firebase.database()
 authTodo = firebase.auth()
 

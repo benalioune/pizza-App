@@ -3,3 +3,5 @@ configs
 __pycache__
 .env
 __init__
+configs/firebase_config.json
+configs/firebase_service_account.json
