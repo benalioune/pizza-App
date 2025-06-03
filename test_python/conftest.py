@@ -3,7 +3,7 @@ import pytest
 from unittest.mock import patch
 import json
 
-# Mock service account with all required fields
+# Mock 
 mock_service_account = {
     "type": "service_account",
     "project_id": "test-project",
@@ -20,7 +20,7 @@ mock_service_account = {
 @pytest.fixture(autouse=True)
 def setup_test_env():
     """Set up test environment variables and mocks"""
-    # Set up environment variables
+    # variable env
     os.environ['FIREBASE_APIKEY'] = 'test-api-key'
     os.environ['FIREBASE_AUTHDOMAIN'] = 'test.firebaseapp.com'
     os.environ['FIREBASE_DATABASEURL'] = 'https://test.firebaseio.com'
@@ -30,7 +30,7 @@ def setup_test_env():
     os.environ['FIREBASE_APPID'] = '1:123456789:web:abcdef'
     os.environ['FIREBASE_SERVICE_ACCOUNT'] = json.dumps(mock_service_account)
 
-    # Mock Firebase initialization
+    # Mock Firebase 
     with patch('database.firebase.get_service_account', return_value=mock_service_account):
         with patch('database.firebase.firebase_admin.initialize_app') as mock_init:
             with patch('database.firebase.pyrebase.initialize_app') as mock_pyrebase:

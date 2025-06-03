@@ -3,7 +3,7 @@ import pytest
 from main import app
 from unittest.mock import patch, MagicMock
 
-# Mock service account with all required fields
+# Mock 
 mock_service_account = {
     "type": "service_account",
     "project_id": "test-project",

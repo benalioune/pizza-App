@@ -46,7 +46,7 @@ async def add_pizza(pizza_data: PizzaCreate, user_data: dict = Depends(get_curre
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error adding pizza: {str(e)}")
 
-#---------------------------- ORDER MANAGEMENT ----------------------------#
+# commandes
 @router.post("/orders", response_model=Order, status_code=201)
 async def create_order(order_data: OrderCreate):
     """Crée une nouvelle commande"""
@@ -59,20 +59,18 @@ async def create_order(order_data: OrderCreate):
             **order_data.dict()
         )
         
-        # Gestion des stocks (version simplifiée sans transaction)
+        # stocks
         for item in order_data.items:
             pizza = db.child("menu").child(item.pizza_id).get().val()
             if not pizza:
                 raise HTTPException(404, f"Pizza with ID {item.pizza_id} not found")
-            
-            # Update inventory for each ingredient
+
             for ingredient in pizza['ingredients']:
                 current = db.child("inventory").child(ingredient).get().val() or 0
                 if current < item.quantity:
                     raise HTTPException(400, f"Not enough {ingredient} in stock")
                 db.child("inventory").child(ingredient).set(current - item.quantity)
         
-        # Save the order with datetime converted to string
         order_dict = full_order.dict()
         order_dict['order_time'] = order_dict['order_time'].isoformat()
         db.child("orders").child(order_id).set(order_dict)
@@ -90,7 +88,7 @@ async def update_order_status(
 ):
     """Met à jour le statut d'une commande"""
     try:
-        # Check if user is admin
+        # cheeck si le user est admin
         user_info = db.child("users").child(user_data['uid']).get().val()
         if not user_info or user_info.get('role') != 'admin':
             raise HTTPException(403, "Action réservée aux administrateurs")
@@ -106,7 +104,7 @@ async def update_order_status(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error updating order status: {str(e)}")
 
-#---------------------------- TABLE MANAGEMENT ----------------------------#
+# tables 
 @router.get("/tables", response_model=Dict[str, dict])
 async def get_table_status():
     """Récupère le statut de toutes les tables"""
