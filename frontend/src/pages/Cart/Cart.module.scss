@@ -1,0 +1,5 @@
+.cart { background: #f4f6fb; min-height: 100vh; }
+.total { font-size: 1.3rem; color: #e31837; font-weight: bold; margin: 1.5rem 0; }
+.cta { background: #e31837; color: #fff; padding: 1rem 2.5rem; border-radius: 2rem; text-decoration: none; transition: background 0.2s;
+  &:hover { background: #1a3a66; }
+}

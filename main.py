@@ -1,6 +1,6 @@
 # import du framework
 from fastapi import FastAPI , HTTPException
-
+from fastapi.middleware.cors import CORSMiddleware
 
 #Import des routers
 
@@ -23,6 +23,13 @@ app  = FastAPI(
     # openapi_tags=tags_metadata # tagsmetadata definit au dessus
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # ou ["*"] pour tout autoriser
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 # Ajouter les routers dédiés

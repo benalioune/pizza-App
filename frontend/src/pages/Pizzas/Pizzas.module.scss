@@ -1,0 +1,18 @@
+.pizzas { background: #f4f6fb; min-height: 100vh; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2rem; margin: 2rem 0; }
+.card {
+  background: #fff; border-radius: 2rem; box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+  padding: 2rem 1.5rem; text-align: center;
+  h3 { color: #1a3a66; margin-bottom: 1rem; }
+  .price { font-weight: bold; font-size: 1.3rem; margin: 1rem 0; color: #e31837; }
+  .details {
+    display: inline-block;
+    color: #1a3a66;
+    text-decoration: underline;
+    margin-bottom: 0.5rem;
+  }
+  button {
+    background: #e31837; color: #fff; border: none; border-radius: 1.5rem; padding: 0.7rem 2rem; font-size: 1rem;
+    cursor: pointer; transition: background 0.2s; &:hover { background: #1a3a66; }
+  }
+}

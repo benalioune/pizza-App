@@ -1,0 +1,16 @@
+.details { background: #f4f6fb; min-height: 100vh; display: flex; flex-direction: column; }
+.card {
+  margin: 3rem auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 2rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+  max-width: 500px;
+  text-align: center;
+  h2 { color: #1a3a66; }
+  button {
+    background: #e31837; color: #fff; border: none; border-radius: 1.5rem; padding: 0.7rem 2rem; font-size: 1rem;
+    margin-top: 2rem; cursor: pointer; transition: background 0.2s;
+    &:hover { background: #1a3a66; }
+  }
+}
