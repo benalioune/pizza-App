@@ -1,18 +1,24 @@
 # API Description
 api_description = """
-Watch API helps you do awesome stuff. 🚀
+🍕 **Pizzeria API** – Gérez facilement votre restaurant !
 
-## todo
+Bienvenue sur l'API de gestion de pizzeria. Cette API permet de gérer le menu, les commandes, et l'état des tables d'un restaurant, tout en assurant des fonctionnalités sécurisées pour les administrateurs.
 
-You will be able to:
+## Fonctionnalités disponibles
 
-* Create todo.
-* Get todoList.
-* Create a todos. 
-* modify todos
-*delete todos
+### Menu
+* 🔍 Consulter le menu des pizzas
+* ➕ Ajouter une nouvelle pizza (admin uniquement)
 
+### Commandes
+* 📝 Créer une commande
+* 🔄 Mettre à jour le statut d'une commande (admin uniquement)
 
+### Tables
+* 📊 Consulter l'état des tables
+* 🪑 Marquer une table comme occupée
 
+> Cette API est sécurisée : certaines opérations nécessitent un rôle administrateur.
 
+🚀 Prête à automatiser la gestion de votre pizzeria ! oui c'est du chat gpt XD
 """
