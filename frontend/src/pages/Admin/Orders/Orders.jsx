@@ -21,9 +21,9 @@ export default function Orders() {
                     </thead>
                     <tbody>
                     {orders.map(o => (
-                        <tr key={o.id}>
-                            <td>#{o.id}</td>
-                            <td>{o.items.length}</td>
+                        <tr key={o.items[0].id}>
+                            <td>#{o.items[0].id}</td>
+                            <td>{o.items[0].qty}</td>
                             <td>{o.total.toFixed(2)}</td>
                         </tr>
                     ))}
