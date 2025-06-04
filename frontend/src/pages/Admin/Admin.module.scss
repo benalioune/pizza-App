@@ -1,0 +1,14 @@
+.admin{
+  padding:3rem 1.5rem;background:#F6F7F8;min-height:calc(100vh - 140px);
+}
+h1{font-size:2rem;margin-bottom:2rem;}
+.tabs{
+  display:flex;gap:.1rem;margin-bottom:2rem;
+}
+.tabs a{
+  flex:1;text-align:center;padding:.7rem 0;background:#fff;border:1px solid #ddd;
+  border-radius:10px;text-decoration:none;color:#555;font-weight:500;
+  transition:background .2s,color .2s;
+}
+.tabs a:hover{background:#2a8bc1;color:#fff;}
+.tabs a.active{background:#006491;color:#fff;}

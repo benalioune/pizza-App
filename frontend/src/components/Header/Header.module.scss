@@ -1,0 +1,16 @@
+.header{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:.8rem 1.2rem;background:#006491;box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+.brand{margin:0;font-size:1.6rem;color:#fff;letter-spacing:-.5px;}
+.nav{display:flex;gap:1rem;}
+.nav a{
+  position:relative;color:#fff;text-decoration:none;font-weight:500;
+}
+.nav a::after{
+  content:"";position:absolute;left:0;bottom:-3px;width:0;height:2px;
+  background:#E31837;transition:width .25s;
+}
+.nav a:hover::after,
+.nav a.active::after{width:100%;}
+.nav a.active{color:#E31837;}
