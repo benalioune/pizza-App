@@ -1,7 +1,3 @@
-
-
-
-
 # import du framework
 from fastapi import FastAPI , HTTPException
 
@@ -22,7 +18,7 @@ from documentation.description import api_description
 
 #initialisation de l'API
 app  = FastAPI(
-    title = "Todo List",
+    title = "Restaurant Management API",
     description=api_description,
     # openapi_tags=tags_metadata # tagsmetadata definit au dessus
 )
